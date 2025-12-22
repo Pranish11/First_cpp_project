@@ -61,6 +61,21 @@ int main() {
             sprite001.move({0.0f,0.2f});
         }
 
+        //boundery
+        sf::Vector2f position = sprite001.getPosition();
+        sf::FloatRect bounds = sprite001.getGlobalBounds();
+        if (position.x < 0) {
+            sprite001.setPosition({0, position.y});
+        }
+        if (position.x + bounds.size.x > 800) {
+            sprite001.setPosition({800 - bounds.size.x, position.y});
+        }
+        if (position.y < 0) {
+            sprite001.setPosition({position.x, 0});
+        }
+        if (position.y + bounds.size.y > 650) {
+            sprite001.setPosition({position.x, 650 - bounds.size.y});
+        }
             // handle events
             while (auto event = window.pollEvent())
             {
