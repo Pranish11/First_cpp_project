@@ -23,6 +23,8 @@ int main() {
     //* Going to use this "facingLeft" for checking if the sprite is facing right or left
     bool facingLeft = true;
 
+    //* Sprite Global Bounds
+    sf::FloatRect SpriteBounds = sprite001.getGlobalBounds();
 
     //ground
     Ground_01.setPosition({0.f,0.f});
@@ -30,8 +32,8 @@ int main() {
 
     //hitboxes for player
     sf::RectangleShape PlayerHitbox;
-    PlayerHitbox.setSize(sf::Vector2f(sprite001.getGlobalBounds().size.x,sprite001.getGlobalBounds().size.y));
-    PlayerHitbox.setPosition(sprite001.getPosition());
+    PlayerHitbox.setSize(SpriteBounds.size);         // width/height
+    PlayerHitbox.setPosition(SpriteBounds.position);
     PlayerHitbox.setFillColor(sf::Color{255,0,0,100}); //for testing
 
 
@@ -76,6 +78,12 @@ int main() {
         if (position.y + bounds.size.y > 650) {
             sprite001.setPosition({position.x, 650 - bounds.size.y});
         }
+
+        //* Update Hitbox of the player
+        sf::FloatRect SpriteBounds = sprite001.getGlobalBounds();
+        PlayerHitbox.setSize(bounds.size);
+        PlayerHitbox.setPosition(bounds.position);
+
             // handle events
             while (auto event = window.pollEvent())
             {
@@ -97,6 +105,8 @@ int main() {
         window.draw(Ground_01);
         //Render ground and background first so the character don't disappear
         window.draw(sprite001);
+        //player hitbox
+        window.draw(PlayerHitbox);
         window.display();
     }
 
