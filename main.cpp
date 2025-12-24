@@ -69,7 +69,7 @@ int main() {
             sprite001.move({0.0f,0.2f});
         }
 
-        //boundery
+        //boundary
         sf::Vector2f position = sprite001.getPosition();
         sf::FloatRect bounds = sprite001.getGlobalBounds();
         if (position.x < 0) {
@@ -89,7 +89,6 @@ int main() {
         PlayerHitbox.setSize(bounds.size);
         PlayerHitbox.setPosition(bounds.position);
 
-        if (dt >=1.f/60.f) {
             // handle events
             while (auto event = window.pollEvent())
             {
@@ -107,7 +106,6 @@ int main() {
                     // update view
                     window.setView(sf::View(sf::FloatRect({0.f, 0.f}, sf::Vector2f(resized->size))));
                 }
-            }
         }
         window.clear(sf::Color::White);
         window.draw(Ground_01);
@@ -116,7 +114,7 @@ int main() {
         //player hitbox
         window.draw(PlayerHitbox);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
-                Attack_01.move({-0.1f,0.f});
+            Attack_01.move({-0.1f,0.f});
             window.draw(Attack_01);
             Attack_01.setPosition({bounds.position});
         }
