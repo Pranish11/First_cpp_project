@@ -113,10 +113,21 @@ int main() {
         window.draw(sprite001);
         //player hitbox
         window.draw(PlayerHitbox);
+
+        //for attacking
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
-            Attack_01.move({-0.1f,0.f});
+            if (facingLeft){
+                Attack_01.setScale({2.f,2.f});
+                Attack_01.move({0.3f,0.f});
+            }
+            else {
+                Attack_01.setScale({-2.f,2.f});
+                Attack_01.move({-0.3f,0.f});
+            }
             window.draw(Attack_01);
-            Attack_01.setPosition({bounds.position});
+
+            //TODO : Fix the attacking in the right side
+            Attack_01.setPosition({PlayerHitbox.getPosition().x,PlayerHitbox.getPosition().y});
         }
         window.display();
     }
