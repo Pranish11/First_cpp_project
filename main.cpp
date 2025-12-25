@@ -8,7 +8,8 @@
 int main() {
     sf::RenderWindow window(sf::VideoMode(sf::Vector2u{800, 600}), "Title",sf::Style::Titlebar|sf::Style::Close);
     sf::Clock clock;
-
+    int PlayerHealth = 100;
+    int enemyHealth = 150;
 
     sf::Texture texture("../assets/Sprite-0001.png");
     sf::Texture ground ("../assets/Ground.png");
@@ -34,6 +35,12 @@ int main() {
 
     //attack
     // Attack_01.setPosition({static_cast<float>(sprite001.getPosition().x),static_cast<float>(sprite001.getPosition().y)});
+    Attack_01.setOrigin({
+        Attack_01.getLocalBounds().size.x / 2.f,
+        Attack_01.getLocalBounds().size.y / 2.f
+        }
+    );
+
 
     //hitboxes for player
     sf::RectangleShape PlayerHitbox;
@@ -111,23 +118,32 @@ int main() {
         window.draw(Ground_01);
         //Render ground and background first so the character don't disappear
         window.draw(sprite001);
-        //player hitbox
-        window.draw(PlayerHitbox);
+        //*player hitbox
+        // window.draw(PlayerHitbox);
 
         //for attacking
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
-            if (facingLeft){
-                Attack_01.setScale({2.f,2.f});
-                Attack_01.move({0.3f,0.f});
-            }
-            else {
-                Attack_01.setScale({-2.f,2.f});
-                Attack_01.move({-0.3f,0.f});
-            }
-            window.draw(Attack_01);
+            float attackOffsetX = 30.f; // distance from player
 
-            //TODO : Fix the attacking in the right side
-            Attack_01.setPosition({PlayerHitbox.getPosition().x,PlayerHitbox.getPosition().y});
+            if (facingLeft)
+            {
+                Attack_01.setScale({ 2.f, 2.f });
+                Attack_01.setPosition({
+                    PlayerHitbox.getPosition().x - attackOffsetX,
+                    PlayerHitbox.getPosition().y
+                });
+            }
+            else
+            {
+                Attack_01.setScale({ -2.f, 2.f });
+                Attack_01.setPosition({
+                    PlayerHitbox.getPosition().x + attackOffsetX,
+                    PlayerHitbox.getPosition().y
+                }
+                );
+            }
+
+            window.draw(Attack_01);
         }
         window.display();
     }
