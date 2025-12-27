@@ -4,12 +4,14 @@
 
 #include "SFML/Audio/Listener.hpp"
 
+//TODO : Fix the hitbox of the attack
+
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(sf::Vector2u{800, 600}), "Title",sf::Style::Titlebar|sf::Style::Close);
     sf::Clock clock;
-    int PlayerHealth = 100;
     int enemyHealth = 150;
+    int score = 0;
 
     sf::Texture texture("../assets/Sprite-0001.png");
     sf::Texture ground ("../assets/Ground.png");
@@ -28,16 +30,15 @@ int main() {
 
     //* Sprite Global Bounds
     sf::FloatRect SpriteBounds = sprite001.getGlobalBounds();
+    sf::FloatRect AttackBounds = Attack_01.getGlobalBounds();
 
     //ground
     Ground_01.setPosition({0.f,0.f});
     Ground_01.setScale({10.f,5.f});
 
     //attack
-    // Attack_01.setPosition({static_cast<float>(sprite001.getPosition().x),static_cast<float>(sprite001.getPosition().y)});
-    // Projectile system variables
     bool isAttackActive = false;
-    float attackSpeed = 2.0f;
+    float attackSpeed = 1.0f;
     bool attackFacingLeft = true;
 
 
@@ -46,6 +47,14 @@ int main() {
     PlayerHitbox.setSize(SpriteBounds.size);
     PlayerHitbox.setPosition(SpriteBounds.position);
     PlayerHitbox.setFillColor(sf::Color{255,0,0,100}); //for testing
+
+
+    //hitbox for the projectile
+    sf::RectangleShape Attack_Hitbox;
+    Attack_Hitbox.setSize(AttackBounds.size);
+    Attack_Hitbox.setPosition(AttackBounds.position);
+    Attack_Hitbox.setFillColor(sf::Color{255,0,0,100}); //for testing
+
 
 
     while (window.isOpen())
@@ -112,16 +121,17 @@ int main() {
                     // update view
                     window.setView(sf::View(sf::FloatRect({0.f, 0.f}, sf::Vector2f(resized->size))));
                 }
-        }
+            }
         window.clear(sf::Color::White);
         window.draw(Ground_01);
         //Render ground and background first so the character don't disappear
         window.draw(sprite001);
         //*player hitbox
-        // window.draw(PlayerHitbox);
-
+        // window.draw(PlayerHitbox)
 
         //for attacking
+        sf::Vector2f  AttackPosition= Attack_01.getPosition();
+
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
             if (!isAttackActive) {
                 isAttackActive = true;  // Mark that we now have an active projectile
@@ -165,6 +175,9 @@ int main() {
                 attackPos.x > 800) {
                 isAttackActive = false;
                 }
+            Attack_Hitbox.setSize(AttackBounds.size);
+            Attack_Hitbox.setPosition(AttackPosition);
+            window.draw(Attack_Hitbox);
             window.draw(Attack_01);
         }
         window.display();
