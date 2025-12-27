@@ -35,11 +35,10 @@ int main() {
 
     //attack
     // Attack_01.setPosition({static_cast<float>(sprite001.getPosition().x),static_cast<float>(sprite001.getPosition().y)});
-    Attack_01.setOrigin({
-        Attack_01.getLocalBounds().size.x / 2.f,
-        Attack_01.getLocalBounds().size.y / 2.f
-        }
-    );
+    // Projectile system variables
+    bool isAttackActive = false;
+    float attackSpeed = 2.0f;
+    bool attackFacingLeft = true;
 
 
     //hitboxes for player
@@ -121,28 +120,51 @@ int main() {
         //*player hitbox
         // window.draw(PlayerHitbox);
 
+
         //for attacking
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
-            float attackOffsetX = 30.f; // distance from player
+            if (!isAttackActive) {
+                isAttackActive = true;  // Mark that we now have an active projectile
+                attackFacingLeft = facingLeft;  // Store the direction player is facing
 
-            if (facingLeft)
-            {
-                Attack_01.setScale({ 2.f, 2.f });
-                Attack_01.setPosition({
-                    PlayerHitbox.getPosition().x - attackOffsetX,
-                    PlayerHitbox.getPosition().y
-                });
-            }
-            else
-            {
-                Attack_01.setScale({ -2.f, 2.f });
-                Attack_01.setPosition({
-                    PlayerHitbox.getPosition().x + attackOffsetX,
-                    PlayerHitbox.getPosition().y
+                float attackOffsetX = 30.f; // distance from player
+
+                if (attackFacingLeft)
+                {
+                    Attack_01.setScale({ 2.f, 2.f });
+                    Attack_01.setPosition({
+                        PlayerHitbox.getPosition().x - attackOffsetX,
+                        PlayerHitbox.getPosition().y
+                    });
                 }
-                );
+                else
+                {
+                    Attack_01.setScale({ -2.f, 2.f });
+                    Attack_01.setPosition({
+                        PlayerHitbox.getPosition().x + attackOffsetX,
+                        PlayerHitbox.getPosition().y
+                    });
+                }
+            }
+        }
+
+        if (isAttackActive) {
+            // Move the projectile in the direction it was fired
+            if (attackFacingLeft) {
+                Attack_01.move({-attackSpeed, 0.f});  // Move left
+            } else {
+                Attack_01.move({attackSpeed, 0.f});   // Move right
             }
 
+            // Check if projectile has gone off-screen (window bounds)
+            sf::Vector2f attackPos = Attack_01.getPosition();
+            sf::FloatRect attackBounds = Attack_01.getGlobalBounds();
+
+            // Delete projectile if it goes beyond window boundaries
+            if (attackPos.x + attackBounds.size.x < 0 ||
+                attackPos.x > 800) {
+                isAttackActive = false;
+                }
             window.draw(Attack_01);
         }
         window.display();
