@@ -4,7 +4,6 @@
 
 #include "SFML/Audio/Listener.hpp"
 
-//TODO : Fix the hitbox of the attack
 
 
 int main() {
@@ -87,6 +86,7 @@ int main() {
         //boundary
         sf::Vector2f position = sprite001.getPosition();
         sf::FloatRect bounds = sprite001.getGlobalBounds();
+
         if (position.x < 0) {
             sprite001.setPosition({0, position.y});
         }
@@ -131,6 +131,7 @@ int main() {
 
         //for attacking
         sf::Vector2f  AttackPosition= Attack_01.getPosition();
+        sf::FloatRect AttackBounds = Attack_01.getGlobalBounds();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
             if (!isAttackActive) {
@@ -175,13 +176,13 @@ int main() {
                 attackPos.x > 800) {
                 isAttackActive = false;
                 }
+
             Attack_Hitbox.setSize(AttackBounds.size);
-            Attack_Hitbox.setPosition(AttackPosition);
-            window.draw(Attack_Hitbox);
+            Attack_Hitbox.setPosition(AttackBounds.position);
+            // window.draw(Attack_Hitbox);
             window.draw(Attack_01);
         }
         window.display();
     }
-
     return 0;
 }
