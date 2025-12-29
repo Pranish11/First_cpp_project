@@ -2,7 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <random>
-#include <chrono>      
+#include <chrono>
+
+#include "cmake-build-debug/_deps/sfml-src/src/SFML/Window/InputImpl.hpp"
 
 
 int randomness() {
@@ -74,7 +76,6 @@ int main() {
     Enemy_01.setScale({2.f,2.f});
     int directionEnemy = randomness() % 2;
     bool EnemyAlive = true;
-    float EnemySpeed = 0.2f;
 
 
     //hitboxes for player
@@ -150,6 +151,7 @@ int main() {
 
         sf::FloatRect EnemyBounds = Enemy_01.getGlobalBounds();
         if (EnemyAlive) {
+            float EnemySpeed = 0.2f;
             // Move enemy side to side
             if (directionEnemy == 0) {
                 Enemy_01.move({-EnemySpeed, 0.f});
@@ -183,15 +185,10 @@ int main() {
             // handle events
             while (auto event = window.pollEvent())
             {
-
-                // on close button release
                 if (event->is<sf::Event::Closed>())
                 {
-                    // close window
                     window.close();
                 }
-
-                // on window resize
                 else if (auto resized = event->getIf<sf::Event::Resized>())
                 {
                     // update view
@@ -207,7 +204,7 @@ int main() {
         //for attacking
         sf::FloatRect AttackBounds = Attack_01.getGlobalBounds();
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::P) || sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             if (!isAttackActive) {
                 isAttackActive = true;  // Mark that we now have an active projectile
                 attackFacingLeft = facingLeft;  // Store the direction player is facing
